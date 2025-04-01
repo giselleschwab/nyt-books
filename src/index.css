@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+    --color-neutro-n0: #FFFFFF;
+    --color-neutro-n1: #F2F3F8;
+    --color-neutro-n2: #D0D3E2;
+    --color-neutro-n3: #9296AC;
+    --color-neutro-n4: #454A67;
+    --color-neutro-n5: #1F2445;
+    --color-neutro-n6: #0E1337;
+    --color-neutro-n7: #010311;
+  
+    --color-bloom-b4: #0B1A8E;
+    --color-bloom-b3: #5062F0;
+  }
