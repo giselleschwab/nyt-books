@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useViewMode } from '../contexts/ViewModeContext';
 import { useSelectedGenre } from '../contexts/SelectedGenreContext';
 import { useFavorites } from '../contexts/FavoritesContext';
+import { useSearch } from '../contexts/SearchContext';
 
 import SearchIcon from '@/assets/icons/search.svg?react';
 import StarIcon from '@/assets/icons/star.svg?react';
@@ -18,12 +19,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { viewMode, setViewMode } = useViewMode();
   const { selectedGenre } = useSelectedGenre();
   const { favorites } = useFavorites();
+  const { searchQuery, setSearchQuery } = useSearch();
 
   const [showFavorites, setShowFavorites] = useState(false);
 
   return (
     <div className="min-h-screen relative">
-      {/* Overlay de fundo escuro */}
       {showFavorites && (
         <div
           className="fixed inset-0 z-40"
@@ -32,42 +33,39 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         />
       )}
 
-      {/* Header */}
       <header className="relative z-50 bg-bloom-b3 text-neutro-n0 pl-5 flex sm:p-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-evenly">
         <div className="flex justify-between items-center w-full sm:w-auto">
           <h1 className="text-2xl font-bold">Bloom Books</h1>
 
-          {/* Estrela mobile */}
           <button
             className={`sm:hidden h-14 w-20 flex items-center justify-center ${showFavorites ? 'bg-bloom-b4' : ''
               }`}
             onClick={() => setShowFavorites(!showFavorites)}
           >
-            <StarIcon className={`w-6 h-6 ${showFavorites ? 'text-white' : ''}`} />
+            <StarIcon className={`w-6 h-6 cursor-pointer ${showFavorites ? 'text-white' : ''}`} />
           </button>
         </div>
 
-        {/* Search */}
-        <div className="flex items-center bg-neutro-n0 rounded-full px-3 py-1.5 text-gray-800 w-full sm:max-w-xl sm:flex-1">
-          <SearchIcon className="w-4 h-4 mr-2 text-neutro-n3" />
-          <input
-            type="text"
-            placeholder="Pesquise aqui..."
-            className="w-[95%] bg-transparent outline-none text-sm"
-          />
-        </div>
+      <div className="flex items-center bg-neutro-n0 rounded-full px-3 py-1.5 text-gray-800 w-full sm:max-w-xl sm:flex-1">
+        <SearchIcon className="w-4 h-4 mr-2 text-neutro-n3" />
+        <input
+          type="text"
+          placeholder="Pesquise aqui..."
+          className="w-[95%] bg-transparent outline-none text-sm"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
 
-        {/* Estrela desktop */}
         <div className="py-0">
           <button
             className={`hidden sm:flex items-center justify-center w-18 h-16 py-0 ${showFavorites ? 'bg-bloom-b4' : ''
               }`}
             onClick={() => setShowFavorites(!showFavorites)}
           >
-            <StarIcon className={`w-6 h-6 ${showFavorites ? 'text-white' : ''}`} />
+            <StarIcon className={`w-6 h-6 cursor-pointer ${showFavorites ? 'text-white' : ''}`} />
           </button>
         </div>
-
       </header>
 
       {showFavorites && (
@@ -100,10 +98,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       </div>
 
-      {/* Conteúdo principal */}
       <main className="p-4 relative z-10">{children}</main>
 
-      {/* Painel lateral de favoritos */}
       {showFavorites && (
         <aside className="fixed right-0 top-14 sm:top-16 w-full max-w-sm h-[calc(100vh-64px)] bg-neutro-n0 shadow-lg p-4 z-50 overflow-y-auto border-t-8 border-bloom-b4 sm:absolute">
 
