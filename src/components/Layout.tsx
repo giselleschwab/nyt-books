@@ -1,4 +1,5 @@
 import { useViewMode } from '../contexts/ViewModeContext';
+import { useSelectedGenre } from '../contexts/SelectedGenreContext';
 import SearchIcon from '@/assets/icons/search.svg?react';
 import StarIcon from '@/assets/icons/star.svg?react';
 import ListIcon from '@/assets/icons/list.svg?react';
@@ -12,6 +13,8 @@ type LayoutProps = {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { viewMode, setViewMode } = useViewMode();
+  const { selectedGenre } = useSelectedGenre();
+
   return (
     <div className="min-h-screen">
       <header className="bg-bloom-b3 text-neutro-n0 px-4 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-evenly">
@@ -38,7 +41,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </header>
 
       <div className="bg-neutro-n1 px-4 py-3 flex justify-between sm:flex-row items-center sm:justify-between">
-        <h2 className="text-lg font-bold sm:ml-34">Gêneros</h2>
+        <h2 className="text-lg font-bold sm:ml-34">
+          {selectedGenre || 'Gêneros'}
+        </h2>
 
         <div className="flex items-center gap-2 text-sm mt-2 sm:mt-0 sm:mr-32">
           <span className="text-gray-600">Exibir</span>

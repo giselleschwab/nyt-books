@@ -1,5 +1,8 @@
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useViewMode } from '../contexts/ViewModeContext';
+import { useSelectedGenre } from '../contexts/SelectedGenreContext';
+
 type Genre = {
   id: number;
   name: string;
@@ -50,6 +53,8 @@ const mockGenres: Genre[] = [
 const GenresList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { viewMode } = useViewMode();
+  const { setSelectedGenre } = useSelectedGenre();
+  const navigate = useNavigate();
 
   return (
     <div className={`space-y-6 sm:mx-30 ${viewMode === 'grid' ? 'grid grid-cols-2 sm:grid-cols-5 sm:gap-5 space-y-0' : ''}`}>
@@ -57,12 +62,22 @@ const GenresList = () => {
         <div
           key={genre.id}
           className={`pb-3 ${viewMode === 'grid'
-              ? 'p-4'
-              : 'flex flex-col sm:flex-row sm:justify-between sm:items-center'
+            ? 'p-4'
+            : 'flex flex-col sm:flex-row sm:justify-between sm:items-center'
             }`}
         >
           <div>
-            <a href="#" className="underline text-xl text-bloom-b3">{genre.name}</a>
+            <a
+              href="#"
+              className="underline text-xl text-bloom-b3"
+              onClick={(e) => {
+                e.preventDefault();
+                setSelectedGenre(genre.name);
+                navigate('/genero-livros');
+              }}
+            >
+              {genre.name}
+            </a>
             <span className={`text-[0.625rem] text-neutro-n3 italic block ${viewMode === 'grid' ? 'block' : 'sm:inline sm:ml-4'
               }`}>
               Atualizado em {genre.updatedAt}
@@ -83,8 +98,8 @@ const GenresList = () => {
             key={page}
             onClick={() => setCurrentPage(page)}
             className={`w-8 h-8  text-sm border-1 rounded-xl cursor-pointer border-neutro-n5 ${currentPage === page
-                ? 'bg-neutro-n5 text-neutro-n0'
-                : 'text-gray-700 hover:bg-neutro-n1'
+              ? 'bg-neutro-n5 text-neutro-n0'
+              : 'text-gray-700 hover:bg-neutro-n1'
               }`}
           >
             {page}
