@@ -3,6 +3,7 @@ import { useViewMode } from '../contexts/ViewModeContext';
 import { useSelectedGenre } from '../contexts/SelectedGenreContext';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useSearch } from '../contexts/SearchContext';
+import { FiChevronDown } from 'react-icons/fi';
 
 import SearchIcon from '@/assets/icons/search.svg?react';
 import StarIcon from '@/assets/icons/star.svg?react';
@@ -46,16 +47,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </button>
         </div>
 
-      <div className="flex items-center bg-neutro-n0 rounded-full px-3 py-1.5 text-gray-800 w-full sm:max-w-xl sm:flex-1">
-        <SearchIcon className="w-4 h-4 mr-2 text-neutro-n3" />
-        <input
-          type="text"
-          placeholder="Pesquise aqui..."
-          className="w-[95%] bg-transparent outline-none text-sm"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
+        <div className="flex items-center bg-neutro-n0 rounded-full px-3 py-2 mb-2 text-gray-800 w-[95%] sm:max-w-xl sm:flex-1">
+          <SearchIcon className="w-4 h-4 mr-2 text-neutro-n3" />
+          <input
+            type="text"
+            placeholder="Pesquise aqui..."
+            className="bg-transparent outline-none text-sm"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+
+        </div>
 
         <div className="py-0">
           <button
@@ -78,12 +80,20 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </h2>
 
         <div className="flex items-center gap-2 text-sm mt-2 sm:mt-0 sm:mr-32">
-          <span className="text-gray-600">Exibir</span>
-          <select className="border border-gray-300 rounded px-2">
-            <option value="5">5</option>
-            <option value="10">10</option>
-          </select>
-          <span className="text-gray-600">por vez</span>
+
+          <span>Exibir</span>
+          <div className="relative">
+            <select
+              className="bg-transparent underline decoration-neutro-n3 cursor-pointer appearance-none px-1 pr-5 focus:outline-none"
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={15}>15</option>
+            </select>
+            <FiChevronDown className="absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none text-sm" />
+          </div>
+          <span className="hidden sm:inline">por vez</span>
+
 
           <button className="ml-3" onClick={() => setViewMode('list')}>
             <ListIcon

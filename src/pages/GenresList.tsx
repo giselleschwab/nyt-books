@@ -5,6 +5,7 @@ import { useSelectedGenre } from '../contexts/SelectedGenreContext';
 import { getGenreList } from '../api/nyt';
 import { usePagination } from '../hooks/usePagination';
 import { useSearch } from '../contexts/SearchContext';
+import { Pagination } from '../components/Pagination';
 
 interface Genre {
   list_name: string;
@@ -78,19 +79,12 @@ const GenresList = () => {
         </div>
       ))}
 
-      {/* Paginação */}
-      <div className="col-span-full flex justify-center items-center gap-1 mt-4">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <button
-            key={page}
-            onClick={() => setCurrentPage(page)}
-            className={`w-8 h-8 text-sm border-1 rounded-xl cursor-pointer border-neutro-n5 ${currentPage === page ? 'bg-neutro-n5 text-neutro-n0' : 'text-gray-700 hover:bg-neutro-n1'
-              }`}
-          >
-            {page}
-          </button>
-        ))}
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
+      
     </div>
   );
 };

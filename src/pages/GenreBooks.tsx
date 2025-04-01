@@ -5,6 +5,7 @@ import { getBooksByGenre } from '../api/nyt';
 import { usePagination } from '../hooks/usePagination';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useSearch } from '../contexts/SearchContext';
+import { Pagination } from '../components/Pagination';
 
 import { FaRegStar, FaStar } from "react-icons/fa";
 
@@ -69,8 +70,8 @@ const GenreBooks = () => {
 
   return (
     <div className={`${viewMode === 'grid'
-        ? 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 sm:mx-30 '
-        : 'space-y-6 sm:ml-35 mx-5'
+      ? 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 sm:mx-30 '
+      : 'space-y-6 sm:ml-35 mx-5'
       }`}>
       {paginatedBooks.map((book, index) => {
         const isBookFavorite = isFavorite(book.title);
@@ -129,19 +130,11 @@ const GenreBooks = () => {
         );
       })}
 
-      <div className="col-span-full flex justify-center items-center gap-1 mt-4">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <button
-            key={page}
-            onClick={() => setCurrentPage(page)}
-            className={`w-8 h-8 text-sm border-1 rounded-xl cursor-pointer border-neutro-n5 ${currentPage === page
-              ? 'bg-neutro-n5 text-neutro-n0'
-              : 'text-gray-700 hover:bg-neutro-n1'
-              }`}>
-            {page}
-          </button>
-        ))}
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 };
