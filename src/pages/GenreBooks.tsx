@@ -1,5 +1,8 @@
+import { useEffect, useState } from 'react';
 import { useSelectedGenre } from '../contexts/SelectedGenreContext';
 import { useViewMode } from '../contexts/ViewModeContext';
+import { getBooksByGenre } from '../api/nyt';
+import { usePagination } from '../hooks/usePagination';
 import { FaRegStar } from "react-icons/fa";
 
 interface Book {
@@ -8,84 +11,50 @@ interface Book {
     description: string;
     imageUrl: string;
     publisher: string;
-    rank: string
+    rank: string;
+    price: string;
 }
-
-const mockBooksByGenre: Record<string, Book[]> = {
-    'Hardcover Nonfiction': [
-        {
-            title: 'WHILE JUSTICE SLEEPS',
-            author: 'Stacey Abrams',
-            description:
-                'A Supreme Court clerk has to unravel a conspiracy involving her boss after he falls into a coma.',
-            imageUrl: 'https://covers.openlibrary.org/b/id/10221691-L.jpg',
-            publisher: 'Editora Bloom',
-            rank: 'Rank'
-        },
-        {
-            title: 'SOULEY',
-            author: 'John Graham',
-            description:
-                'An orphaned boy in Sudan finds a new path when he moves to the United States.',
-            imageUrl: 'https://covers.openlibrary.org/b/id/11153845-L.jpg',
-            publisher: 'Editora Bloom',
-            rank: 'Rank'
-        },
-        {
-            title: 'THE LAST THING HE TOLD ME',
-            author: 'Laura Dave',
-            description:
-                'A woman forms an unexpected relationship with her stepdaughter while searching for the truth about her missing husband.',
-            imageUrl: 'https://covers.openlibrary.org/b/id/11147953-L.jpg',
-            publisher: 'Editora Bloom',
-            rank: 'Rank'
-        },
-        {
-            title: 'THAT SUMMER',
-            author: 'Jennifer Weiner',
-            description:
-                'A woman’s life is turned upside down when she begins receiving emails meant for someone else with the same name.',
-            imageUrl: 'https://covers.openlibrary.org/b/id/11147955-L.jpg',
-            publisher: 'Editora Bloom',
-            rank: 'Rank'
-        },
-        {
-            title: 'PEOPLE WE MEET ON VACATION',
-            author: 'Emily Henry',
-            description:
-                'Opposites attract when two best friends go on vacation together.',
-            imageUrl: 'https://covers.openlibrary.org/b/id/11147952-L.jpg',
-            publisher: 'Editora Bloom',
-            rank: 'Rank'
-        },
-    ],
-    'Combined Print & E-Book Fiction': [
-        {
-            title: 'THE LINCOLN HIGHWAY',
-            author: 'Amor Towles',
-            description:
-                'In 1954, four boys set out on a journey that will change their lives forever.',
-            imageUrl: 'https://covers.openlibrary.org/b/id/11149770-L.jpg',
-            publisher: 'Editora Bloom',
-            rank: 'Rank'
-        },
-        {
-            title: 'THE MIDNIGHT LIBRARY',
-            author: 'Matt Haig',
-            description:
-                'Between life and death there is a library, and within that library, the shelves go on forever.',
-            imageUrl: 'https://covers.openlibrary.org/b/id/11097887-L.jpg',
-            publisher: 'Editora Bloom',
-            rank: 'Rank'
-        },
-    ],
-};
 
 const BooksList = () => {
     const { selectedGenre } = useSelectedGenre();
     const { viewMode } = useViewMode();
+    const [books, setBooks] = useState<Book[]>([]);
 
-    const books = mockBooksByGenre[selectedGenre] || [];
+    const {
+        currentPage,
+        totalPages,
+        paginatedItems: paginatedBooks,
+        setCurrentPage
+    } = usePagination(books, 5);
+
+    useEffect(() => {
+        const fetchBooks = async () => {
+            if (!selectedGenre) return;
+            try {
+                const data = await getBooksByGenre(selectedGenre);
+                const mappedBooks: Book[] = data.map((item: any) => {
+                    const details = item.book_details[0];
+                    const asin = details.primary_isbn10;
+
+                    return {
+                        title: details.title,
+                        author: details.author,
+                        description: details.description,
+                        price: details.price.toString(),
+                        imageUrl: `https://images.amazon.com/images/P/${asin}.01.LZZZZZZZ.jpg`,
+                        publisher: item.publisher,
+                        rank: item.rank.toString(),
+                       
+                    };
+                });
+                setBooks(mappedBooks);
+            } catch (error) {
+                console.error('Erro ao buscar livros:', error);
+            }
+        };
+
+        fetchBooks();
+    }, [selectedGenre]);
 
     if (!selectedGenre) return null;
 
@@ -96,7 +65,7 @@ const BooksList = () => {
                 : 'space-y-6 sm:ml-35 mx-5'
                 }`}
         >
-            {books.map((book, index) => (
+            {paginatedBooks.map((book, index) => (
                 <div
                     key={index}
                     className={`${viewMode === 'grid' ? 'flex flex-col items-center pt-4 pb-8' : 'flex gap-4'
@@ -120,7 +89,6 @@ const BooksList = () => {
                                 <p className="text-neutro-n4 text-sm">by {book.author}</p>
                                 <FaRegStar className="text-bloom-b3" />
                             </div>
-
                         </div>
 
                         <p className="text-sm text-neutro-n6">{book.description}</p>
@@ -128,11 +96,24 @@ const BooksList = () => {
                         <p className="text-sm text-neutro-n6">Rank: {book.rank}</p>
 
                         <button className="px-3 py-2 mt-4 bg-bloom-b3 text-neutro-n0 rounded-full text-sm w-max">
-                            Comprar ou ler
+                           {book.price}
                         </button>
                     </div>
                 </div>
             ))}
+
+            <div className="col-span-full flex justify-center items-center gap-1 mt-4">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`w-8 h-8 text-sm border-1 rounded-xl cursor-pointer border-neutro-n5 ${currentPage === page ? 'bg-neutro-n5 text-neutro-n0' : 'text-gray-700 hover:bg-neutro-n1'
+                            }`}
+                    >
+                        {page}
+                    </button>
+                ))}
+            </div>
         </div>
     );
 };
