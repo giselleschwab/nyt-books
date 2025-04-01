@@ -6,22 +6,26 @@ import BooksList from "./pages/GenreBooks";
 
 import { ViewModeProvider } from "./contexts/ViewModeContext";
 import { SelectedGenreProvider } from "./contexts/SelectedGenreContext";
+import { FavoritesProvider } from './contexts/FavoritesContext';
 
 
 function App() {
   return (
-    <SelectedGenreProvider>
-      <ViewModeProvider>
-        <Router>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<GenresList />} />
-              <Route path="/genero-livros" element={<BooksList />} />
-            </Routes>
-          </Layout>
-        </Router>
-      </ViewModeProvider>
-    </SelectedGenreProvider>
+    <FavoritesProvider>
+      <SelectedGenreProvider>
+        <ViewModeProvider>
+          <Router>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<GenresList />} />
+                <Route path="/genero-livros" element={<BooksList />} />
+              </Routes>
+            </Layout>
+          </Router>
+        </ViewModeProvider>
+      </SelectedGenreProvider>
+    </FavoritesProvider>
+
 
   );
 }
