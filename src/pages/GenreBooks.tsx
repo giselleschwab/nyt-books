@@ -18,6 +18,7 @@ interface Book {
   publisher: string;
   rank: string;
   price: string;
+  amazonUrl: string;
 }
 
 export const GenreBooks = () => {
@@ -60,6 +61,7 @@ export const GenreBooks = () => {
             price: details.price.toString(),
             imageUrl: `https://images.amazon.com/images/P/${asin}.01.LZZZZZZZ.jpg`,
             rank: item.rank.toString(),
+            amazonUrl: item.amazon_product_url,
           };
         });
         setBooks(mappedBooks);
@@ -126,9 +128,14 @@ export const GenreBooks = () => {
               <p className="text-sm text-neutro-n6 sm:w-auto w-40">{book.description}</p>
               <p className="text-sm text-neutro-n6">Rank: {book.rank}</p>
 
-              <button className="px-3 py-2 mt-4 bg-bloom-b3 text-neutro-n0 font-bold rounded-full text-sm w-max">
-                {`Compre por R$${book.price}`}
-              </button>
+              <a
+                href={book.amazonUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-2 mt-4 bg-bloom-b3 text-neutro-n0 font-bold rounded-full text-sm w-max"
+              >
+                Compre por R${book.price}
+              </a>
             </div>
           </div>
         );

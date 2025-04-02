@@ -46,9 +46,16 @@ export const GenresList = () => {
 
   useEffect(() => {
     const fetchGenres = async () => {
+      const cached = localStorage.getItem('nyt-genres');
+      if (cached) {
+        setGenres(JSON.parse(cached));
+        return;
+      }
+  
       try {
         const data = await getGenreList();
         setGenres(data);
+        localStorage.setItem('nyt-genres', JSON.stringify(data));
       } catch (error) {
         console.error('Erro ao buscar gêneros:', error);
       }
