@@ -88,7 +88,7 @@ interface PaginationProps {
         </button>
   
         {/* Mobile view (esconde páginas demais) */}
-        <div className="flex sm:hidden">{renderPageNumbers()}</div>
+        <div className="flex gap-2 sm:hidden">{renderPageNumbers()}</div>
   
         {/* Desktop view (todas as páginas) */}
         <div className="hidden sm:flex gap-2">

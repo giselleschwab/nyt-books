@@ -57,7 +57,7 @@ export const GenresList = () => {
   }, []);
 
   return (
-    <div className={`space-y-6 sm:mx-30 ${viewMode === 'grid' ? 'grid grid-cols-2 sm:grid-cols-5 sm:gap-5 space-y-0' : ''}`}>
+    <div className={`space-y-6 sm:mx-30 ${viewMode === 'grid' ? 'grid grid-cols-2 sm:grid-cols-5 sm:gap-5 space-y-0 pb-0' : ''}`}>
       {paginatedGenres.map((genre) => (
         <div
           key={genre.list_name}
@@ -84,8 +84,8 @@ export const GenresList = () => {
           </div>
 
           <div className={`flex flex-col gap-1 text-xs text-neutro-n4 mt-2 mr-5 sm:mt-0 ${viewMode === 'grid' ? 'flex-col' : 'sm:flex-row sm:gap-20'}`}>
-            <span>Última publicação: {genre.newest_published_date}</span>
-            <span>Publicação mais antiga: {genre.oldest_published_date}</span>
+            <span>Última publicação: {new Date(genre.newest_published_date).toLocaleDateString('pt-BR')}</span>
+            <span>Publicação mais antiga: {new Date(genre.oldest_published_date).toLocaleDateString('pt-BR')}</span>
           </div>
         </div>
       ))}

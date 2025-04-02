@@ -115,7 +115,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <main className="p-4 relative z-10">{children}</main>
 
       {showFavorites && (
-        <aside className="fixed right-0 top-14 sm:top-16 w-full max-w-sm h-[calc(100vh-64px)] bg-neutro-n0 shadow-lg p-4 z-50 overflow-y-auto border-t-8 border-bloom-b4 sm:absolute">
+        <aside className="fixed right-0 top-14 sm:top-16 w-[85%] sm:w-full sm:max-w-sm h-[calc(100vh-64px)] bg-neutro-n0 shadow-lg p-4 z-50 overflow-y-auto border-t-8 border-bloom-b4 sm:absolute">
 
           <h3 className="text-lg font-semibold text-bloom-b4 mb-4">Favoritos</h3>
 
