@@ -36,9 +36,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         />
       )}
 
-      <header className="relative z-50 bg-bloom-b3 text-neutro-n0 pl-5 flex sm:p-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-evenly">
+      <header className="relative z-50 bg-bloom-b3 text-neutro-n0 pl-5 flex sm:p-0 flex-col gap-2 sm:flex-row sm:px-32 sm:items-center justify-between">
         <div className="flex justify-between items-center w-full sm:w-auto">
-          <h1 className="text-2xl font-bold">Bloom Books</h1>
+          <h1 className="text-2xl font-bold pl-2">Bloom Books</h1>
 
           <button
             className={`sm:hidden h-14 w-20 flex items-center justify-center ${showFavorites ? 'bg-bloom-b4' : ''

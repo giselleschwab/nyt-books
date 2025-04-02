@@ -59,7 +59,6 @@ export const GenreBooks = () => {
             description: details.description,
             price: details.price.toString(),
             imageUrl: `https://images.amazon.com/images/P/${asin}.01.LZZZZZZZ.jpg`,
-            publisher: item.publisher,
             rank: item.rank.toString(),
           };
         });
@@ -124,8 +123,7 @@ export const GenreBooks = () => {
                 </div>
               </div>
 
-              <p className="text-sm text-neutro-n6">{book.description}</p>
-              <p className="text-sm text-neutro-n6">{book.publisher}</p>
+              <p className="text-sm text-neutro-n6 sm:w-auto w-40">{book.description}</p>
               <p className="text-sm text-neutro-n6">Rank: {book.rank}</p>
 
               <button className="px-3 py-2 mt-4 bg-bloom-b3 text-neutro-n0 font-bold rounded-full text-sm w-max">
