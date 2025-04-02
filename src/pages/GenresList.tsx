@@ -5,6 +5,8 @@ import { useSelectedGenre } from '../contexts/SelectedGenreContext';
 import { getGenreList } from '../api/nyt';
 import { usePagination } from '../hooks/usePagination';
 import { useSearch } from '../contexts/SearchContext';
+import { usePaginationContext } from '../contexts/PaginationContext';
+
 import { Pagination } from '../components/Pagination';
 
 interface Genre {
@@ -15,12 +17,13 @@ interface Genre {
   oldest_published_date: string;
 }
 
-const GenresList = () => {
+export const GenresList = () => {
   const [genres, setGenres] = useState<Genre[]>([]);
   const { viewMode } = useViewMode();
+  const { searchQuery } = useSearch();
+  const { itemsPerPage } = usePaginationContext();
   const { setSelectedGenre } = useSelectedGenre();
   const navigate = useNavigate();
-  const { searchQuery } = useSearch();
 
   const filteredGenres = genres.filter((genre) =>
     genre.display_name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -31,7 +34,15 @@ const GenresList = () => {
     totalPages,
     paginatedItems: paginatedGenres,
     setCurrentPage
-  } = usePagination(filteredGenres, 5);
+  } = usePagination(filteredGenres, itemsPerPage);
+
+  useEffect(() => {
+    setSelectedGenre('');
+  }, [setSelectedGenre]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, setCurrentPage]);
 
   useEffect(() => {
     const fetchGenres = async () => {
@@ -72,7 +83,7 @@ const GenresList = () => {
             </span>
           </div>
 
-          <div className={`flex flex-col gap-1 text-xs text-neutro-n4 mt-2 sm:mt-0 ${viewMode === 'grid' ? 'flex-col' : 'sm:flex-row sm:gap-20'}`}>
+          <div className={`flex flex-col gap-1 text-xs text-neutro-n4 mt-2 mr-5 sm:mt-0 ${viewMode === 'grid' ? 'flex-col' : 'sm:flex-row sm:gap-20'}`}>
             <span>Última publicação: {genre.newest_published_date}</span>
             <span>Publicação mais antiga: {genre.oldest_published_date}</span>
           </div>
@@ -84,9 +95,8 @@ const GenresList = () => {
         totalPages={totalPages}
         onPageChange={setCurrentPage}
       />
-      
+
     </div>
   );
 };
 
-export default GenresList;

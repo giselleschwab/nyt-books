@@ -1,27 +1,29 @@
+import { ReactNode } from 'react';
 import { useState } from 'react';
 import { useViewMode } from '../contexts/ViewModeContext';
 import { useSelectedGenre } from '../contexts/SelectedGenreContext';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useSearch } from '../contexts/SearchContext';
+import { usePaginationContext } from '../contexts/PaginationContext';
+
 import { FiChevronDown } from 'react-icons/fi';
+import { FaStar } from "react-icons/fa";
 
 import SearchIcon from '@/assets/icons/search.svg?react';
-import StarIcon from '@/assets/icons/star.svg?react';
 import ListIcon from '@/assets/icons/list.svg?react';
 import GridIcon from '@/assets/icons/grid.svg?react';
 
-import { ReactNode } from 'react';
 
 type LayoutProps = {
   children: ReactNode;
 };
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { viewMode, setViewMode } = useViewMode();
   const { selectedGenre } = useSelectedGenre();
   const { favorites } = useFavorites();
   const { searchQuery, setSearchQuery } = useSearch();
-
+  const { itemsPerPage, setItemsPerPage } = usePaginationContext();
   const [showFavorites, setShowFavorites] = useState(false);
 
   return (
@@ -43,11 +45,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               }`}
             onClick={() => setShowFavorites(!showFavorites)}
           >
-            <StarIcon className={`w-6 h-6 cursor-pointer ${showFavorites ? 'text-white' : ''}`} />
+            <FaStar className={`w-6 h-6 cursor-pointer ${showFavorites ? 'text-white' : ''}`} />
           </button>
         </div>
 
-        <div className="flex items-center bg-neutro-n0 rounded-full px-3 py-2 mb-2 text-gray-800 w-[95%] sm:max-w-xl sm:flex-1">
+        <div className="flex items-center bg-neutro-n0 rounded-full px-3 py-2 mb-2 text-gray-800 w-[95%] mt-0 sm:mt-2 sm:max-w-xl sm:flex-1">
           <SearchIcon className="w-4 h-4 mr-2 text-neutro-n3" />
           <input
             type="text"
@@ -65,7 +67,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               }`}
             onClick={() => setShowFavorites(!showFavorites)}
           >
-            <StarIcon className={`w-6 h-6 cursor-pointer ${showFavorites ? 'text-white' : ''}`} />
+            <FaStar className={`w-7 h-7 cursor-pointer ${showFavorites ? 'text-white' : ''}`} />
           </button>
         </div>
       </header>
@@ -74,8 +76,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="absolute top-[64px] right-0 w-72 h-[1px] bg-bloom-b4 z-50" />
       )}
 
-      <div className="bg-neutro-n1 px-4 py-3 flex justify-between sm:flex-row items-center sm:justify-between relative z-10">
-        <h2 className="text-lg font-bold sm:ml-34">
+      <div className="bg-neutro-n1 px-7 py-3 flex justify-between sm:flex-row items-center sm:justify-between relative z-10">
+        <h2 className="text-lg font-bold sm:ml-28">
           {selectedGenre || 'Gêneros'}
         </h2>
 
@@ -85,6 +87,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="relative">
             <select
               className="bg-transparent underline decoration-neutro-n3 cursor-pointer appearance-none px-1 pr-5 focus:outline-none"
+              value={itemsPerPage}
+              onChange={(e) => setItemsPerPage(Number(e.target.value))}
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
@@ -113,14 +117,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       {showFavorites && (
         <aside className="fixed right-0 top-14 sm:top-16 w-full max-w-sm h-[calc(100vh-64px)] bg-neutro-n0 shadow-lg p-4 z-50 overflow-y-auto border-t-8 border-bloom-b4 sm:absolute">
 
-          <h3 className="text-lg font-semibold mb-4">Favoritos</h3>
+          <h3 className="text-lg font-semibold text-bloom-b4 mb-4">Favoritos</h3>
 
           {favorites.length === 0 ? (
             <p className="text-sm text-neutro-n3">Nenhum livro favoritado ainda.</p>
           ) : (
             <ul className="flex flex-col gap-4">
               {favorites.map((book, index) => (
-                <li key={index} className="flex items-start gap-3">
+                <li key={index} className="flex items-center gap-3">
                   <img
                     src={book.imageUrl}
                     alt={book.title}
@@ -128,7 +132,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   />
                   <div className="text-sm">
                     <p className="font-semibold">{book.title}</p>
-                    <p className="text-xs text-neutro-n3">by {book.author}</p>
+                    <div className="flex gap-2">
+                      <p className="text-xs text-neutro-n3">by {book.author}</p>
+                      <FaStar className="text-bloom-b3 cursor-pointer" />
+                    </div>
                   </div>
                 </li>
               ))}
@@ -139,5 +146,3 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     </div>
   );
 };
-
-export default Layout;

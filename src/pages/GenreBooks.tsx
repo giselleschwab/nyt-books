@@ -6,6 +6,7 @@ import { usePagination } from '../hooks/usePagination';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useSearch } from '../contexts/SearchContext';
 import { Pagination } from '../components/Pagination';
+import { usePaginationContext } from '../contexts/PaginationContext';
 
 import { FaRegStar, FaStar } from "react-icons/fa";
 
@@ -19,11 +20,12 @@ interface Book {
   price: string;
 }
 
-const GenreBooks = () => {
+export const GenreBooks = () => {
   const { selectedGenre } = useSelectedGenre();
   const { viewMode } = useViewMode();
   const { addFavorite, removeFavorite, isFavorite } = useFavorites();
   const { searchQuery } = useSearch();
+  const { itemsPerPage } = usePaginationContext();
 
   const [books, setBooks] = useState<Book[]>([]);
 
@@ -36,7 +38,11 @@ const GenreBooks = () => {
     totalPages,
     paginatedItems: paginatedBooks,
     setCurrentPage
-  } = usePagination(filteredBooks, 5);
+  } = usePagination(filteredBooks, itemsPerPage);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, setCurrentPage]);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -138,5 +144,3 @@ const GenreBooks = () => {
     </div>
   );
 };
-
-export default GenreBooks;
